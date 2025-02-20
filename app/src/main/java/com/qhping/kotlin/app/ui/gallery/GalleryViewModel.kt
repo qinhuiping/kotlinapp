@@ -8,7 +8,7 @@ import com.qhping.kotlin.app.bean.ImageItem
 class GalleryViewModel(private val repository: GalleryRepository) : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is gallery Fragment"
+        value = "这是我的相册，点击这里回到顶部"
     }
     val text: LiveData<String> = _text
 

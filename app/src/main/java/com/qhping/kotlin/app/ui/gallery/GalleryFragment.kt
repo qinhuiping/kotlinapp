@@ -1,6 +1,7 @@
 package com.qhping.kotlin.app.ui.gallery
 
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,12 +20,8 @@ class GalleryFragment : Fragment() {
 
     private var _binding: FragmentGalleryBinding? = null
     private lateinit var galleryViewModel: GalleryViewModel
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var imageAdapter: ImageAdapter
-    private val imageList = mutableListOf<ImageItem>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -33,8 +30,6 @@ class GalleryFragment : Fragment() {
         val factory = GalleryViewModelFactory(repository)
         galleryViewModel = ViewModelProvider(this, factory)[GalleryViewModel::class.java]
 
-//        galleryViewModel =
-//            ViewModelProvider(this)[GalleryViewModel(GalleryRepository(requireContext()))::class.java]
         _binding = FragmentGalleryBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -47,9 +42,17 @@ class GalleryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val permissionToRequest = arrayOf(
-            android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.CAMERA
-        )
+        val permissionToRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(
+                android.Manifest.permission.READ_MEDIA_IMAGES,
+//                android.Manifest.permission.CAMERA
+            )
+        } else {
+            arrayOf(
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+//                android.Manifest.permission.CAMERA
+            )
+        }
         val permissionGranted = permissionToRequest.all {
             ContextCompat.checkSelfPermission(
                 requireContext(), it
@@ -58,7 +61,7 @@ class GalleryFragment : Fragment() {
 
 
         imageAdapter = ImageAdapter(requireContext(), mutableListOf())
-        binding.rvImage.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.rvImage.layoutManager = GridLayoutManager(requireContext(), 4)
         binding.rvImage.adapter = imageAdapter
 
 
@@ -76,7 +79,7 @@ class GalleryFragment : Fragment() {
 
     private val requestMultiplePermission =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permission ->
-            permission.entries.forEach {
+            permission.entries.forEach { it ->
                 val pName = it.key
                 val isGranted = it.value
                 if (isGranted) {
@@ -84,6 +87,11 @@ class GalleryFragment : Fragment() {
 
                 } else {
                     Toast.makeText(requireContext(), "$pName 被拒绝", Toast.LENGTH_SHORT).show()
+                }
+
+                val allPermissionsGranted = permission.values.all { it }
+                if (allPermissionsGranted){
+                    galleryViewModel.loadGalleryImages()
                 }
             }
         }

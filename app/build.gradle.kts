@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.qhping.kotlin.app"
-        minSdk = 29
+        minSdk = 34
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
