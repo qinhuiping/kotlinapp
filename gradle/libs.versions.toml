@@ -19,6 +19,8 @@ glide = "4.16.0"
 hilt = "2.48.1"
 kapt_hilt = "1.0.0"
 hilt_lifecycle = "1.0.0-alpha03"
+photo_view = "2.3.0"
+cameraX = "1.2.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,6 +40,12 @@ androidx-hilt-lifecycle = { group = "androidx.hilt", name = "hilt-lifecycle-view
 kapt-androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "kapt_hilt" }
 com-google-dagger = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 kapt-com-google-dagger-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+github-chrisbanes = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photo_view" }
+androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "cameraX" }
+androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "cameraX" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "cameraX" }
+androidx-camera-video = { group = "androidx.camera", name = "camera-video", version.ref = "cameraX" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "cameraX" }
 
 
 [plugins]

@@ -48,23 +48,6 @@ class GalleryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val permissionToRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arrayOf(
-                android.Manifest.permission.READ_MEDIA_IMAGES,
-//                android.Manifest.permission.CAMERA
-            )
-        } else {
-            arrayOf(
-                android.Manifest.permission.READ_EXTERNAL_STORAGE,
-//                android.Manifest.permission.CAMERA
-            )
-        }
-        val permissionGranted = permissionToRequest.all {
-            ContextCompat.checkSelfPermission(
-                requireContext(), it
-            ) == PackageManager.PERMISSION_GRANTED
-        }
-
 
         imageAdapter = ImageAdapter(requireContext(), mutableListOf())
         binding.rvImage.layoutManager = GridLayoutManager(requireContext(), 2)
@@ -82,13 +65,8 @@ class GalleryFragment : Fragment() {
             }
         })
 
+        galleryViewModel.loadGalleryImages()
 
-        if (permissionGranted) {
-            Toast.makeText(requireContext(), "已有权限", Toast.LENGTH_SHORT).show()
-            galleryViewModel.loadGalleryImages()
-        } else {
-            requestMultiplePermission.launch(permissionToRequest)
-        }
         lifecycleScope.launch {
             galleryViewModel.galleryImages.collect { imageList ->
                 imageAdapter.setList(imageList)
@@ -102,61 +80,11 @@ class GalleryFragment : Fragment() {
     }
 
 
-    private val requestMultiplePermission =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permission ->
-            permission.entries.forEach {
-                val pName = it.key
-                val isGranted = it.value
-                var shouldShowRationale = false
-                var allPermissionsGranted = true
-                if (isGranted) {
-                    Toast.makeText(requireContext(), "$pName 权限已授予", Toast.LENGTH_SHORT).show()
 
-                } else {
-                    Toast.makeText(requireContext(), "$pName 被拒绝", Toast.LENGTH_SHORT).show()
-                    allPermissionsGranted = false
-                    if (shouldShowRequestPermissionRationale(pName)) {
-                        shouldShowRationale = true
-                    }
-                }
-
-//                allPermissionsGranted = permission.values.all { it }
-                if (allPermissionsGranted) {
-                    galleryViewModel.loadGalleryImages()
-                } else {
-                    if (shouldShowRationale) {
-                        showPermissionRationale(permission.keys.toTypedArray())
-                    } else {
-                        showSettingDialog()
-                    }
-                }
-            }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-    }
-
-    private fun showPermissionRationale(permissions: Array<String>) {
-        AlertDialog.Builder(requireContext()).setTitle("权限请求")
-            .setMessage("应用需要这些权限才能正常工作，请授权").setPositiveButton("确定") { _, _ ->
-                requestMultiplePermission.launch(permissions)
-            }.setNegativeButton("取消") { dialog, _ ->
-                dialog.dismiss()
-            }.show()
-    }
-
-    private fun showSettingDialog() {
-        AlertDialog.Builder(requireContext()).setTitle("权限被拒绝")
-            .setMessage("你已经永久拒绝了某些权限，请在应用设置中手动开启")
-            .setPositiveButton("去设置") { _, _ ->
-                val intent = Intent()
-                intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                val uri = Uri.fromParts("package", requireContext().packageName, null)
-                intent.data = uri
-                startActivity(intent)
-            }.setNegativeButton("取消") { dialog, _ -> dialog.dismiss() }.show()
     }
 
 
