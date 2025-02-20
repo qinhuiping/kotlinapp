@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.qhping.kotlin.app.bean.ImageItem
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class GalleryViewModel(private val repository: GalleryRepository) : ViewModel() {
 
@@ -12,11 +14,14 @@ class GalleryViewModel(private val repository: GalleryRepository) : ViewModel() 
     }
     val text: LiveData<String> = _text
 
-    private val _galleryImages = MutableLiveData<List<ImageItem>>()
-    val galleryImages: LiveData<List<ImageItem>> = _galleryImages
+    private val _galleryImages = MutableStateFlow<List<ImageItem>>(emptyList())
+    val galleryImages: StateFlow<List<ImageItem>> = _galleryImages
 
+    private var currentPage = 0
+    private val pageSize = 40
     fun loadGalleryImages() {
-        val images = repository.getAllImage()
-        _galleryImages.value = images
+        val images = repository.getAllImage(currentPage, pageSize)
+        _galleryImages.value += images
+        currentPage++
     }
 }

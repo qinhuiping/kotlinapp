@@ -12,9 +12,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import com.qhping.kotlin.app.bean.ImageItem
+import androidx.recyclerview.widget.RecyclerView
 import com.qhping.kotlin.app.databinding.FragmentGalleryBinding
+import kotlinx.coroutines.launch
 
 class GalleryFragment : Fragment() {
 
@@ -61,8 +63,20 @@ class GalleryFragment : Fragment() {
 
 
         imageAdapter = ImageAdapter(requireContext(), mutableListOf())
-        binding.rvImage.layoutManager = GridLayoutManager(requireContext(), 4)
+        binding.rvImage.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvImage.adapter = imageAdapter
+
+        binding.rvImage.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as GridLayoutManager
+                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                val totalItemCount = layoutManager.itemCount
+                if (lastVisibleItemPosition == totalItemCount - 1) {
+                    galleryViewModel.loadGalleryImages()
+                }
+            }
+        })
 
 
         if (permissionGranted) {
@@ -71,8 +85,10 @@ class GalleryFragment : Fragment() {
         } else {
             requestMultiplePermission.launch(permissionToRequest)
         }
-        galleryViewModel.galleryImages.observe(viewLifecycleOwner) { imageList ->
-            imageAdapter.setList(imageList)
+        lifecycleScope.launch {
+            galleryViewModel.galleryImages.collect { imageList ->
+                imageAdapter.setList(imageList)
+            }
         }
     }
 
@@ -90,7 +106,7 @@ class GalleryFragment : Fragment() {
                 }
 
                 val allPermissionsGranted = permission.values.all { it }
-                if (allPermissionsGranted){
+                if (allPermissionsGranted) {
                     galleryViewModel.loadGalleryImages()
                 }
             }
