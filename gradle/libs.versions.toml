@@ -1,0 +1,48 @@
+[versions]
+agp = "8.3.0"
+kotlin = "1.9.0"
+kotlin-kapt = "1.9.0"
+dagger-hilt-android-plugin = "2.48.1"
+coreKtx = "1.10.1"
+junit = "4.13.2"
+junitVersion = "1.1.5"
+espressoCore = "3.5.1"
+appcompat = "1.6.1"
+material = "1.10.0"
+constraintlayout = "2.1.4"
+lifecycleLivedataKtx = "2.6.1"
+lifecycleViewmodelKtx = "2.6.1"
+navigationFragmentKtx = "2.6.0"
+navigationUiKtx = "2.6.0"
+baseRecyclerViewAdapterHelper = "3.0.4"
+glide = "4.16.0"
+hilt = "2.48.1"
+kapt_hilt = "1.0.0"
+hilt_lifecycle = "1.0.0-alpha03"
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
+androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
+github-cymchad-adapter = { group = "com.github.CymChad", name = "BaseRecyclerViewAdapterHelper", version.ref = "baseRecyclerViewAdapterHelper" }
+github-bumtech-glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+androidx-hilt-lifecycle = { group = "androidx.hilt", name = "hilt-lifecycle-viewmodel", version.ref = "hilt_lifecycle" }
+kapt-androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "kapt_hilt" }
+com-google-dagger = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+kapt-com-google-dagger-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-kapt = { id = "kotlin-kapt", version.ref = "kotlin-kapt" }
+hiltKotlinAndroid = { id = "dagger.hilt.android.plugin", version.ref = "dagger-hilt-android-plugin" }
+
