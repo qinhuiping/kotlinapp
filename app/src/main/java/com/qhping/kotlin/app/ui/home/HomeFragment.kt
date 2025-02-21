@@ -35,7 +35,13 @@ class HomeFragment : Fragment() {
                 parent?.addView(preview)
             }
         }
-        homeViewModel.startCamera(viewLifecycleOwner,requireContext(),binding.preview.surfaceProvider)
+        binding.btTakePhoto.setOnClickListener {
+            homeViewModel.takePicture()
+        }
+
+        homeViewModel.startCamera(
+            viewLifecycleOwner, requireContext(), binding.preview.surfaceProvider
+        )
     }
 
     override fun onDestroyView() {
